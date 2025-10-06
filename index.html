@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASM Blocks - WebAssembly Visual Block Programming</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Blockly 라이브러리 -->
+    <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
+    <script src="https://unpkg.com/blockly/msg/ko.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <header class="header">
+                            <h1>WASM Blocks</h1>
+            <p>WebAssembly Visual Block Programming Environment</p>
+            <div class="controls">
+                <button id="langBtn" class="btn lang-toggle" title="언어 전환 / Switch Language">한국어</button>
+                <button id="runBtn" class="btn primary" title="코드 실행 (Ctrl+Enter)">실행</button>
+                <button id="exportBtn" class="btn" title="프로젝트 저장 (Ctrl+S)">저장</button>
+                <button id="clearBtn" class="btn" title="워크스페이스 초기화 (Ctrl+N)">초기화</button>
+                <button id="helpBtn" class="btn" title="도움말 보기">도움말</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- 블록 편집 영역 -->
+            <div class="editor-section">
+                <div class="section-header">
+                    <h2 id="blockEditorTitle">블록 편집기</h2>
+                </div>
+                <div id="blocklyDiv" class="blockly-workspace"></div>
+                
+                <!-- 툴박스 정의 -->
+                <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+                    <category name="기본 타입" colour="#5C6BC0">
+                        <block type="wasm_i32"></block>
+                        <block type="wasm_i64"></block>
+                        <block type="wasm_f32"></block>
+                        <block type="wasm_f64"></block>
+                    </category>
+                    
+                    <category name="산술 연산" colour="#FF7043">
+                        <block type="wasm_add"></block>
+                        <block type="wasm_sub"></block>
+                        <block type="wasm_mul"></block>
+                        <block type="wasm_div"></block>
+                        <sep></sep>
+                        <label text="부호 구분 연산"></label>
+                        <block type="wasm_div_s"></block>
+                        <block type="wasm_div_u"></block>
+                        <block type="wasm_rem_s"></block>
+                        <block type="wasm_rem_u"></block>
+                    </category>
+                    
+                    <category name="비교 연산" colour="#9C27B0">
+                        <block type="wasm_eq"></block>
+                        <block type="wasm_ne"></block>
+                        <block type="wasm_lt"></block>
+                        <block type="wasm_le"></block>
+                        <block type="wasm_gt"></block>
+                        <block type="wasm_ge"></block>
+                        <sep></sep>
+                        <label text="0과 비교"></label>
+                        <block type="wasm_i32_eqz"></block>
+                        <block type="wasm_i64_eqz"></block>
+                    </category>
+                    
+                    <category name="비트 연산" colour="#455A64">
+                        <block type="wasm_and"></block>
+                        <block type="wasm_or"></block>
+                        <block type="wasm_xor"></block>
+                        <block type="wasm_shl"></block>
+                        <block type="wasm_shr_s"></block>
+                        <block type="wasm_shr_u"></block>
+                        <block type="wasm_rotl"></block>
+                        <block type="wasm_rotr"></block>
+                        <sep></sep>
+                        <label text="비트 카운트"></label>
+                        <block type="wasm_clz"></block>
+                        <block type="wasm_ctz"></block>
+                        <block type="wasm_popcnt"></block>
+                    </category>
+                    
+                    <category name="수학 함수" colour="#9C27B0">
+                        <block type="wasm_min"></block>
+                        <block type="wasm_max"></block>
+                        <block type="wasm_abs"></block>
+                        <block type="wasm_sqrt"></block>
+                        <block type="wasm_ceil"></block>
+                        <block type="wasm_floor"></block>
+                        <block type="wasm_trunc"></block>
+                        <block type="wasm_nearest"></block>
+                        <block type="wasm_copysign"></block>
+                    </category>
+                    
+                    <category name="타입 변환" colour="#795548">
+                        <block type="wasm_wrap"></block>
+                        <block type="wasm_extend_s"></block>
+                        <block type="wasm_extend_u"></block>
+                        <block type="wasm_trunc_f32_s"></block>
+                        <block type="wasm_trunc_f32_u"></block>
+                        <block type="wasm_trunc_f64_s"></block>
+                        <block type="wasm_trunc_f64_u"></block>
+                        <block type="wasm_convert_i32_s"></block>
+                        <block type="wasm_convert_i32_u"></block>
+                        <block type="wasm_demote"></block>
+                        <block type="wasm_promote"></block>
+                        <sep></sep>
+                        <label text="비트 재해석"></label>
+                        <block type="wasm_reinterpret_i32"></block>
+                        <block type="wasm_reinterpret_i64"></block>
+                        <block type="wasm_reinterpret_f32"></block>
+                        <block type="wasm_reinterpret_f64"></block>
+                    </category>
+                    
+                    <category name="제어문" colour="#66BB6A">
+                        <block type="wasm_if"></block>
+                        <block type="wasm_loop"></block>
+                        <block type="wasm_block"></block>
+                        <block type="wasm_br"></block>
+                        <block type="wasm_br_if"></block>
+                        <block type="wasm_br_table"></block>
+                        <block type="wasm_select"></block>
+                        <block type="wasm_unreachable"></block>
+                        <block type="wasm_nop"></block>
+                        <sep></sep>
+                        <label text="스택 조작"></label>
+                        <block type="wasm_drop"></block>
+                    </category>
+                    
+                    <category name="함수" colour="#FFA726">
+                        <block type="wasm_function"></block>
+                        <block type="wasm_call"></block>
+                        <block type="wasm_return"></block>
+                    </category>
+                    
+                    <category name="로컬 변수" colour="#8BC34A">
+                        <block type="wasm_local_get"></block>
+                        <block type="wasm_local_set"></block>
+                        <block type="wasm_local_tee"></block>
+                        <block type="wasm_local_declare"></block>
+                        <block type="wasm_local_init"></block>
+                        <block type="wasm_param_get"></block>
+                    </category>
+                    
+                    <category name="글로벌 변수" colour="#FF5722">
+                        <block type="wasm_global"></block>
+                        <block type="wasm_global_get"></block>
+                        <block type="wasm_global_set"></block>
+                    </category>
+                    
+                    <category name="메모리" colour="#AB47BC">
+                        <block type="wasm_memory"></block>
+                        <block type="wasm_load"></block>
+                        <block type="wasm_store"></block>
+                        <sep></sep>
+                        <label text="8/16비트 로드"></label>
+                        <block type="wasm_load8_s"></block>
+                        <block type="wasm_load8_u"></block>
+                        <block type="wasm_load16_s"></block>
+                        <block type="wasm_load16_u"></block>
+                        <sep></sep>
+                        <label text="8/16비트 스토어"></label>
+                        <block type="wasm_store8"></block>
+                        <block type="wasm_store16"></block>
+                        <sep></sep>
+                        <label text="메모리 관리"></label>
+                        <block type="wasm_memory_size"></block>
+                        <block type="wasm_memory_grow"></block>
+                        <sep></sep>
+                        <label text="i64 메모리 연산"></label>
+                        <block type="wasm_i64_load32_s"></block>
+                        <block type="wasm_i64_load32_u"></block>
+                        <block type="wasm_i64_load8_s"></block>
+                        <block type="wasm_i64_load8_u"></block>
+                        <block type="wasm_i64_load16_s"></block>
+                        <block type="wasm_i64_load16_u"></block>
+                        <block type="wasm_i64_store32"></block>
+                        <block type="wasm_i64_store8"></block>
+                        <block type="wasm_i64_store16"></block>
+                    </category>
+                    
+                    <category name="테이블" colour="#FF7043">
+                        <block type="wasm_table"></block>
+                        <block type="wasm_table_get"></block>
+                        <block type="wasm_table_set"></block>
+                        <block type="wasm_call_indirect"></block>
+                        <block type="wasm_table_size"></block>
+                        <block type="wasm_table_grow"></block>
+                        <block type="wasm_funcref"></block>
+                        <block type="wasm_ref_null"></block>
+                    </category>
+                    
+                    <category name="데이터/세그먼트" colour="#78909C">
+                        <block type="wasm_data"></block>
+                        <block type="wasm_data_drop"></block>
+                        <block type="wasm_elem"></block>
+                        <block type="wasm_elem_drop"></block>
+                        <block type="wasm_start"></block>
+                        <block type="wasm_type"></block>
+                    </category>
+                    
+                    <category name="모듈" colour="#26C6DA">
+                        <block type="wasm_module"></block>
+                        <block type="wasm_export"></block>
+                        <block type="wasm_import"></block>
+                    </category>
+                </xml>
+            </div>
+
+            <!-- 코드 미리보기 및 실행 결과 -->
+            <div class="output-section">
+                <div class="code-preview">
+                    <div class="section-header">
+                        <h3>생성된 WAT 코드</h3>
+                    </div>
+                    <pre id="generatedCode" class="code-display"></pre>
+                </div>
+                
+                <div class="execution-result">
+                    <div class="section-header">
+                        <h3>실행 결과</h3>
+                    </div>
+                    <div id="outputConsole" class="console"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 도움말 모달 -->
+    <div id="helpModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>🧩 WASM Blocks 도움말</h2>
+            
+            <div class="help-section">
+                <h3>키보드 단축키</h3>
+                <ul>
+                    <li><kbd>Ctrl + Enter</kbd>: 코드 실행</li>
+                    <li><kbd>Ctrl + S</kbd>: 프로젝트 저장</li>
+                    <li><kbd>Ctrl + N</kbd>: 워크스페이스 초기화</li>
+                </ul>
+            </div>
+            
+            <div class="help-section">
+                <h3>사용법</h3>
+                <ol>
+                    <li><strong>모듈 블록</strong>으로 시작하세요</li>
+                    <li><strong>함수 블록</strong>을 추가하여 로직을 구현하세요</li>
+                    <li><strong>내보내기 블록</strong>으로 함수를 외부에서 호출 가능하게 하세요</li>
+                    <li><strong>실행 버튼</strong>을 눌러 WebAssembly 코드를 실행하세요</li>
+                </ol>
+            </div>
+            
+            <div class="help-section">
+                <h3>WebAssembly 블록 종류</h3>
+                <ul>
+                    <li><strong>기본 타입</strong>: i32, i64, f32, f64 상수 값</li>
+                    <li><strong>산술 연산</strong>: add, sub, mul, div, div_s, div_u, rem_s, rem_u</li>
+                    <li><strong>비교 연산</strong>: eq, ne, lt, le, gt, ge, eqz (0과 비교)</li>
+                    <li><strong>비트 연산</strong>: and, or, xor, shl, shr, rotl, rotr, clz, ctz, popcnt</li>
+                    <li><strong>수학 함수</strong>: min, max, abs, sqrt, ceil, floor, trunc, nearest</li>
+                    <li><strong>타입 변환</strong>: wrap, extend, trunc, convert, promote, demote, reinterpret</li>
+                    <li><strong>제어문</strong>: if/then/else, loop, block, br, br_if, br_table, select, drop</li>
+                    <li><strong>함수</strong>: 함수 정의, 호출, 반환</li>
+                    <li><strong>로컬 변수</strong>: get, set, tee, 선언, 초기화, 파라미터 접근</li>
+                    <li><strong>글로벌 변수</strong>: 전역 변수 선언, 읽기, 쓰기</li>
+                    <li><strong>메모리</strong>: 로드, 저장, 8/16/32비트 액세스, 크기 관리, 확장</li>
+                    <li><strong>테이블</strong>: 함수 포인터, call_indirect, 동적 호출, 함수 레퍼런스</li>
+                    <li><strong>데이터/세그먼트</strong>: 메모리 초기화, 테이블 초기화, start 함수</li>
+                    <li><strong>모듈</strong>: 모듈, 내보내기, 가져오기</li>
+                </ul>
+            </div>
+            
+            <div class="help-section">
+                <h3>WebAssembly 특징</h3>
+                <ul>
+                    <li><strong>타입 시스템</strong>: i32/i64 정수, f32/f64 부동소수점</li>
+                    <li><strong>스택 머신</strong>: 스택 기반 가상 머신 아키텍처</li>
+                    <li><strong>선형 메모리</strong>: 바이트 배열로 구성된 단일 메모리</li>
+                    <li><strong>샌드박스</strong>: 안전한 실행 환경</li>
+                    <li><strong>함수 시그니처</strong>: 매개변수와 반환 타입 명시</li>
+                </ul>
+            </div>
+            
+            <div class="help-section">
+                <h3>파일 관리</h3>
+                <ul>
+                    <li>프로젝트를 JSON 형식으로 저장할 수 있습니다</li>
+                    <li>파일을 드래그 앤 드롭으로 로드할 수 있습니다</li>
+                    <li>생성된 WAT 코드를 확인할 수 있습니다</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 파일들 (순서 중요!) -->
+    <script src="blocks/wasm-blocks.js"></script>
+    <script src="generators/wasm-generator.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

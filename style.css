@@ -1,0 +1,371 @@
+/* 전역 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #888;
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 헤더 스타일 */
+.header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    height: 80px;
+}
+
+.header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #4a5568;
+    margin-bottom: 0.2rem;
+}
+
+.header p {
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.controls {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.btn {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 20px;
+    margin: 20px 0;
+    width: 100px;
+    height: 51px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.btn:hover {
+    background-color: #005BDD;
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn.primary {
+    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+    color: white;
+}
+
+.btn.primary:hover {
+    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+}
+
+.btn.lang-toggle {
+    background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+    color: white;
+    font-weight: 600;
+    animation: lang-glow 3s ease-in-out infinite alternate;
+}
+
+.btn.lang-toggle:hover {
+    background: linear-gradient(135deg, #E55A2B 0%, #E8841A 100%);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
+}
+
+@keyframes lang-glow {
+    0% { box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3); }
+    100% { box-shadow: 0 4px 16px rgba(255, 107, 53, 0.6); }
+}
+
+/* 메인 컨텐츠 */
+.main-content {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 0.1rem;
+    padding: 0.1rem;
+    overflow: hidden;
+}
+
+/* 편집기 섹션 */
+.editor-section {
+    background: white;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.section-header {
+    background: #000;
+    color: white;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.section-header h2, .section-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.blockly-workspace {
+    flex: 1;
+    min-height: 400px;
+}
+
+/* 출력 섹션 */
+.output-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.code-preview {
+    background: white;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.execution-result {
+    background: white;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.code-display {
+    flex: 1;
+    background: #1a202c;
+    color: #e2e8f0;
+    padding: 1rem;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    overflow: auto;
+    white-space: pre-wrap;
+}
+
+.console {
+    flex: 1;
+    background: #f7fafc;
+    padding: 1rem;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    overflow: auto;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+    }
+    
+    .output-section {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .controls {
+        justify-content: center;
+    }
+    
+    .main-content {
+        padding: 0.5rem;
+    }
+    
+    .output-section {
+        flex-direction: column;
+    }
+}
+
+/* 스크롤바 커스터마이징 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Blockly 커스터마이징 */
+.blocklyToolboxDiv {
+    background: #f8f9fa !important;
+    border-right: 1px solid #e9ecef !important;
+}
+
+.blocklyTreeRow {
+    border-radius: 6px !important;
+    margin: 2px 4px !important;
+}
+
+.blocklyTreeSelected {
+    background: #e3f2fd !important;
+}
+
+/* 콘솔 스타일 */
+.console-line {
+    margin: 0.25rem 0;
+    padding: 0.25rem;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.console-line:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* WAT 코드 구문 강조 */
+.code-display .keyword {
+    color: #d73a49;
+    font-weight: bold;
+}
+
+.code-display .number {
+    color: #005cc5;
+}
+
+.code-display .string {
+    color: #032f62;
+}
+
+.code-display .comment {
+    color: #6a737d;
+    font-style: italic;
+}
+
+/* 로딩 애니메이션 */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 모달 스타일 */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 80%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+}
+
+.close:hover,
+.close:focus {
+    color: #666;
+}
+
+.help-section {
+    margin-bottom: 2rem;
+}
+
+.help-section h3 {
+    color: #4a5568;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.help-section ul,
+.help-section ol {
+    margin-left: 1.5rem;
+    line-height: 1.6;
+}
+
+.help-section li {
+    margin-bottom: 0.5rem;
+}
+
+kbd {
+    background: #f1f3f4;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    color: #202124;
+    display: inline-block;
+    font-family: monospace;
+    font-size: 0.85em;
+    padding: 2px 6px;
+    margin: 0 2px;
+}
